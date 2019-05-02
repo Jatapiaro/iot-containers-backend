@@ -60,3 +60,25 @@ $ yarn install
     2. `npm run dev` now is used as `yarn dev`
     3. To add a new npm package instead of `npm i package-name` just do `yarn add package-name`
 
+
+# Retrieving and using access tokens
+
+You need to get a client for your applications/clients. So, we need to get the client token in order to allow our users to consume our API.
+
+1. Generate a new client
+```shell
+$ php artisan passport:client --password
+```
+
+2. Then call it from your client
+```
+    // Make a post to http://your.server/oauth/token
+    {
+        'grant_type' => 'password',
+        'client_id' => 'client-id',
+        'client_secret' => 'client-secret',
+        'username' => 'taylor@laravel.com',
+        'password' => 'my-password',
+        'scope' => '',
+    }
+```
