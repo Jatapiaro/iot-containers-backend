@@ -1,0 +1,16 @@
+.containers-navbar {
+    .nav-tabs {
+        .nav-link {
+            &.active {
+                border-color: $tabler-blue !important;
+                color: $tabler-blue !important;
+            }
+            background: transparent;
+            border: none !important;
+            &:hover {
+                color: $tabler-blue;
+                border-bottom: 1px solid !important;
+            }
+        }
+    }
+}

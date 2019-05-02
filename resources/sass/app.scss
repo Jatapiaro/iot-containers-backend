@@ -2,13 +2,17 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
-// Variables
-@import 'variables';
+// Base
+@import './base/base';
+@import './base/variables';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+// App Styles
+@import '~tabler-react/dist/Tabler.css';
+@import "~font-awesome/scss/font-awesome";
+@import '~react-toastify/dist/ReactToastify.min.css';
+
+// Components
+@import './components/navbar';
