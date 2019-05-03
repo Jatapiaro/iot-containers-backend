@@ -43,9 +43,9 @@ class AuthController extends BaseController {
     /**
      * Constructor
      */
-    public function __construct(UserRepoInterface $repo, UserService $service) {
-        $this->repo = $repo;
-        $this->service = $service;
+    public function __construct(UserRepoInterface $userRepo, UserService $userService) {
+        $this->userRepo = $userRepo;
+        $this->userService = $userService;
     }
 
     /**
@@ -89,18 +89,19 @@ class AuthController extends BaseController {
     {
         $vb = User::ValidationBook();
         $data = $request->validate($vb["rules"], $vb["messages"]);
-        $data = $data["user"];
+
+        // Neccesary data to get a token at registration
+        $password = $data["user"]["password"];
+        $clientId = $data["user"]["client_id"];
+        $clientSecret = $data["user"]["client_secret"];
 
         // If validation passes, create user
-        $password = $data["password"];
-        $data["password"] = Hash::make($data["password"]);
-
-        $user = $this->repo->create($data);
+        $user = $this->userService->store($data);
 
         $request->request->add([
             'grant_type'    => 'password',
-            'client_id'     => $data["client_id"],
-            'client_secret' => $data["client_secret"],
+            'client_id'     => $clientId,
+            'client_secret' => $clientSecret,
             'username'      => $user->email,
             'password'      => $password,
             'scope'         => null,

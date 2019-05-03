@@ -80,10 +80,10 @@ class User extends Authenticatable
      *
      * @return array
      **/
-    public static function ValidationBook()
+    public static function ValidationBook($except = [], $append = [])
     {
-        $data = [];
-        $data['rules'] = [
+        $book = ['rules' => [], 'messages' => []];
+        $book['rules'] = [
             'user.name' => 'required|string',
             'user.email' => 'required|email|unique:users,email',
             'user.password' => 'required|min:8',
@@ -93,7 +93,7 @@ class User extends Authenticatable
             'user.client_id' => 'required|exists:oauth_clients,id',
             'user.client_secret' => 'required|exists:oauth_clients,secret'
         ];
-        $data['messages'] = [
+        $book['messages'] = [
             'user.name.required' => 'El nombre del usuario es requerido',
             'user.name.string' => 'El nombre del usuario tiene que ser un texto.',
 
@@ -111,7 +111,14 @@ class User extends Authenticatable
             'user.client_id.required' => 'Se requiere el id del cliente',
             'user.client_secret.required' => 'Se requiere el secret del cliente y debe serl el secret del cliente',
         ];
-        return $data;
+        if (!empty($except)) {
+            $except = array_flip($except);
+            $book['rules'] = array_diff_key($book['rules'], $except);
+        }
+        if (!empty($append)) {
+            $book = array_merge_recursive($book, $append);
+        }
+        return $book;
     }
 
 }

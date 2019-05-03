@@ -25,6 +25,22 @@ class UserService {
     }
 
     /**
+     * Stores the given user
+     *
+     * @return App\Models\User
+     */
+    public function store($data) {
+        $this->validate($data);
+        // We extract only the user data
+        $data = $data["user"];
+        // Hash the password
+        $data["password"] = Hash::make($data["password"]);
+        // Store the user
+        $user = $this->repo->create($data);
+        return $user;
+    }
+
+    /**
      * Validate the given data using the validation book of the model
      *
      * @param array $data
