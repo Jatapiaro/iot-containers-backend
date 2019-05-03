@@ -82,3 +82,22 @@ $ php artisan passport:client --password
         'scope' => '',
     }
 ```
+
+# Documenting the API with swagger
+
+## Accesing the documentation
+
+In your browser access `http://your.domain/api/v1/documentation`.
+For the routes that need authentication:
+1. In the swagger view we have a green button that says authorize.
+2. Pass in the form the exact same data that you use to get your acces token when you use Postman
+
+## Generating the documentation
+Simply check the examples on the other controllers and models.
+
+Finally execute 
+```shell
+$ php artisan l5-swagger:generate
+```
+to generate all the documentation again.
+

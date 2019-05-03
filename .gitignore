@@ -10,3 +10,9 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 .rnd
+
+# Swagger documentation
+/storage/api-docs/api-docs.json
+
+# DS STORE
+.DS_STORE

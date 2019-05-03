@@ -7,6 +7,41 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
+/**
+ * @OA\Schema(type="object", title="User", description="user model", required={"name", "email", "password", "password_confirmation", "client_id", "client_secret"})
+ * @OA\Property(
+ *     type="string",
+ *     description="Name of the user",
+ *     property="name"
+ * ),
+ * @OA\Property(
+ *     type="string",
+ *     description="Email of the user",
+ *     property="email"
+ * ),
+ * @OA\Property(
+ *     type="string",
+ *     description="Password of the user",
+ *     property="password",
+ *     format="password"
+ * ),
+ * @OA\Property(
+ *     type="string",
+ *     description="Password confirmarion of the user",
+ *     property="password_confirmation",
+ *     format="password"
+ * ),
+ * @OA\Property(
+ *     type="integer",
+ *     description="Id of the client fromt which this user is being registered",
+ *     property="client_id"
+ * ),
+ * @OA\Property(
+ *     type="string",
+ *     description="Secret key of the client id",
+ *     property="client_secret",
+ * )
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
@@ -49,32 +84,32 @@ class User extends Authenticatable
     {
         $data = [];
         $data['rules'] = [
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
-            'password_confirmation' => 'required|min:8|same:password',
+            'user.name' => 'required|string',
+            'user.email' => 'required|email|unique:users,email',
+            'user.password' => 'required|min:8',
+            'user.password_confirmation' => 'required|min:8|same:user.password',
 
             //Extra data for register
-            'client_id' => 'required|exists:oauth_clients,id',
-            'client_secret' => 'required|exists:oauth_clients,secret'
+            'user.client_id' => 'required|exists:oauth_clients,id',
+            'user.client_secret' => 'required|exists:oauth_clients,secret'
         ];
         $data['messages'] = [
-            'name.required' => 'El nombre del usuario es requerido',
-            'name.string' => 'El nombre del usuario tiene que ser un texto.',
+            'user.name.required' => 'El nombre del usuario es requerido',
+            'user.name.string' => 'El nombre del usuario tiene que ser un texto.',
 
-            'email.required' => 'El email del usuario es requerido',
-            'email.email' => 'El email del usuario tiene que ser valido.',
-            'email.unique' => 'Este email ya está registrado.',
+            'user.email.required' => 'El email del usuario es requerido',
+            'user.email.email' => 'El email del usuario tiene que ser valido.',
+            'user.email.unique' => 'Este email ya está registrado.',
 
-            'password.required' => 'Se require una contraseña',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres',
+            'user.password.required' => 'Se require una contraseña',
+            'user.password.min' => 'La contraseña debe tener al menos 8 caracteres',
 
-            'password_confirmation.required' => 'Se requiere la confirmación del password',
-            'password_confirmation.same' => 'El password y su confirmación no coinciden',
+            'user.password_confirmation.required' => 'Se requiere la confirmación del password',
+            'user.password_confirmation.same' => 'El password y su confirmación no coinciden',
 
             // Extras
-            'client_id.required' => 'Se requiere el id del cliente',
-            'client_secret.required' => 'Se requiere el secret del cliente y debe serl el secret del cliente',
+            'user.client_id.required' => 'Se requiere el id del cliente',
+            'user.client_secret.required' => 'Se requiere el secret del cliente y debe serl el secret del cliente',
         ];
         return $data;
     }
