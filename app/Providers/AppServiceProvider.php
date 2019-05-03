@@ -39,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Repositories\Interfaces\UserRepoInterface',
             'App\Repositories\UserRepo'
         );
+        $this->app->bind(
+            'App\Repositories\Interfaces\ContainerRepoInterface',
+            'App\Repositories\ContainerRepo'
+        );
     }
 
 }

@@ -18,6 +18,12 @@ class CreateContainersTable extends Migration
             $table->string('name');
             $table->double('volume', 30, 4);
             $table->string('device_id')->nullable();
+
+            $table->unsignedBigInteger('user_id')->unsigned();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
+
             $table->boolean('dummy')->default(false);
             $table->timestamps();
         });

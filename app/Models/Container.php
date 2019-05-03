@@ -2,11 +2,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Container extends Model
 {
-    use SoftDeletes;
 
     /**
      * The attributes that should be mutated to dates.
@@ -24,6 +22,7 @@ class Container extends Model
         'device_id',
         'dummy',
         'name',
+        'user_id',
         'volume',
     ];
 
@@ -38,8 +37,26 @@ class Container extends Model
     {
         $book = ['rules' => [], 'messages' => []];
         $book['rules'] = [
+            'container.device_id' => 'string|nullable',
+            'container.dummy' => 'boolean',
+            'container.name' => 'string|required',
+            'container.user_id' => 'required|exists:users,id',
+            'container.volume' => 'required|numeric|between:0,99999999999999999999999999.9999'
         ];
         $book['messages'] = [
+            'container.device_id.string' => 'El id del dispositivo debe ser un texto',
+
+            'container.dummy.boolean' => 'El campo dummy debe ser un valor booleano',
+
+            'container.name.string' => 'El nombre del contenedor debe ser un texto',
+            'container.name.required' => 'El nombre del contenedor es requerido',
+
+            'container.user_id.required' => 'Se requiere el id del usuario',
+            'container.user_id.exists' => 'El id del usuario debe ser un id válido',
+
+            'container.volume.required' => 'Se requiere la capacidad/volumen del contenedor',
+            'container.volume.numeric' => 'El volumen del contenedor debe ser un número',
+            'container.volume.between' => 'El volumen del conteneder debe tener un valor mínimo de 0 y un máximo de 99999999999999999999999999.9999'
         ];
         if (!empty($except)) {
             $except = array_flip($except);
