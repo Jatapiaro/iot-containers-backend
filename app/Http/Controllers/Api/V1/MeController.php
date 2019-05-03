@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller as BaseController;
 use App\Http\Resources\User as UserResource;
 use Auth;
 
-class UsersController extends BaseController {
+class MeController extends BaseController {
 
     /**
      * Display user profile.

@@ -16,12 +16,19 @@ use Illuminate\Http\Request;
 Route::group([
     'as' => 'api.v1.',
     'prefix' => 'v1',
-    'middleware' => ['auth:api'],
     'namespace' => 'Api\V1',
     ], function () {
 
+        /**
+         * Registration
+         */
+        Route::post('/register', 'AuthController@register');
 
-        Route::get('/me', 'UsersController@me');
-
+        Route::group(['middleware' => ['auth:api']], function() {
+            /**
+             * Profile
+             */
+            Route::get('/me', 'MeController@me');
+        });
 
     });
