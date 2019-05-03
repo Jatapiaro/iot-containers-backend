@@ -10,7 +10,7 @@ use App\Models\Container;
 
 class ContainerRepo extends BaseEloquentRepo implements ContainerRepoInterface
 {
-    public function __construct(User $entity) {
+    public function __construct(Container $entity) {
         $this->model = $entity;
     }
 

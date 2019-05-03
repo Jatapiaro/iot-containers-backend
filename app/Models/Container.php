@@ -14,6 +14,13 @@ class Container extends Model
     protected $dates = ['deleted_at'];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['dummy' => 'boolean'];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var  array
@@ -67,4 +74,12 @@ class Container extends Model
         }
         return $book;
     }
+
+    /**
+     * Defines the relationship a container and his creator
+     */
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+    }
+
 }

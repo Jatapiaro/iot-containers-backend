@@ -109,7 +109,7 @@ class User extends Authenticatable
 
             // Extras
             'user.client_id.required' => 'Se requiere el id del cliente',
-            'user.client_secret.required' => 'Se requiere el secret del cliente y debe serl el secret del cliente',
+            'user.client_secret.required' => 'Se requiere el secret del cliente',
         ];
         if (!empty($except)) {
             $except = array_flip($except);
@@ -119,6 +119,13 @@ class User extends Authenticatable
             $book = array_merge_recursive($book, $append);
         }
         return $book;
+    }
+
+    /**
+     * Defines the relationship between an user and his containers
+     */
+    public function containers() {
+        return $this->hasMany('App\Models\Container');
     }
 
 }

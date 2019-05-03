@@ -25,10 +25,18 @@ Route::group([
         Route::post('/register', 'AuthController@register');
 
         Route::group(['middleware' => ['auth:api']], function() {
+
+            /**
+             * Containers
+             */
+            Route::apiResource('containers','ContainerController');
+
             /**
              * Profile
              */
             Route::get('/me', 'MeController@me');
+
+
         });
 
     });
