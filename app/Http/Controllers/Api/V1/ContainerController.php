@@ -77,4 +77,50 @@ class ContainerController extends BaseController {
         return ContainerResource::collection($containers);
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/v1/containers",
+    *     summary="Register a new container",
+    *     tags={"Containers"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\RequestBody(
+    *         description="Container to be registered",
+    *         @OA\JsonContent(
+    *              @OA\Property(
+    *                  property="container",
+    *                  type="object",
+    *                  ref="#/components/schemas/Container"
+    *              ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Container that was created",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=422,
+    *         description="Unprocessable Entity.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+    /**
+     * Register a new container in the system.
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request) {
+        $vb = Container::ValidationBook(['container.user_id']);
+        $data = $request->validate($vb["rules"], $vb["messages"]);
+        // Add the user id to the container
+        $data["container"]["user_id"] = Auth::user()->id;
+        $container = $this->containerService->store($data);
+        return new ContainerResource($container);
+    }
+
 }

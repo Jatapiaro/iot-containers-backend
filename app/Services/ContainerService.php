@@ -31,6 +31,7 @@ class ContainerService {
     public function store($data) {
         $this->validate($data);
         $data = $data["container"];
+        $data["volume"] = $this->calculateVolume($data);
         // Store the container
         $container = $this->repo->create($data);
         return $container;
@@ -53,4 +54,17 @@ class ContainerService {
         }
         return true;
     }
+
+
+    /**
+     * Return the volume of a container in m3
+     * @param $data of the container
+     * @return float with the volume
+     */
+    private function calculateVolume($data) {
+        $radius = $data["radius"];
+        $height = $data["height"];
+        return pi() * ($radius * $radius) * $height;
+    }
+
 }
