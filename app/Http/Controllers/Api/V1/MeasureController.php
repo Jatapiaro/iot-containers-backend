@@ -51,6 +51,17 @@ class MeasureController extends BaseController {
     *     summary="Shows the measures of the given container",
     *     tags={"Containers", "Measures"},
     *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="container",
+    *         in="path",
+    *         description="ID of the container",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64",
+    *             example=1
+    *         )
+    *     ),
     *     @OA\Response(
     *         response=200,
     *         description="Shows the container measures",
@@ -76,7 +87,68 @@ class MeasureController extends BaseController {
      */
     public function index(Request $request, Container $container)
     {
-        $measures = $container->measures;
+        $measures = ($container->user_id == Auth::user()->id)? $container->measures : Measure::where('id', '-1')->get();
         return MeasureResource::collection($measures);
+    }
+
+    /**
+    * @OA\Post(
+    *     path="/api/v1/containers/{container}/measures",
+    *     summary="Register a new measure",
+    *     tags={"Containers", "Measures"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="container",
+    *         in="path",
+    *         description="ID of the container",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64",
+    *             example=1
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Measure to be registered",
+    *         @OA\JsonContent(
+    *              @OA\Property(
+    *                  property="container",
+    *                  type="object",
+    *                  ref="#/components/schemas/Container"
+    *              ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Container that was created",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=422,
+    *         description="Unprocessable Entity.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+    /**
+     * Register a new measure in the system.
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Container $container
+     */
+    public function store(Request $request, Container $container) {
+        if ($container->user_id != Auth::user()->id) {
+            return new MeasureResource(null);
+        }
+        $vb = Measure::ValidationBook(['measure.container_id']);
+        $data = $request->validate($vb["rules"], $vb["messages"]);
+        // Add the container id to the measure
+        $data["measure"]["container_id"] = $container->id;
+        $data["measure"]["volume"] = 9.0;
+        $measure = $this->measureService->store($data);
+        return new MeasureResource($measure);
     }
 }

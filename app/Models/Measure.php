@@ -43,16 +43,16 @@ class Measure extends Model
     {
         $book = ['rules' => [], 'messages' => []];
         $book['rules'] = [
-            'container.height' => 'required|numeric|between:0,99999999999999999999999999.9999',
-            'container.user_id' => 'required|exists:users,id'
+            'measure.height' => 'required|numeric|between:0,99999999999999999999999999.9999',
+            'measure.container_id' => 'required|exists:containers,id'
         ];
         $book['messages'] = [
-            'container.height.required' => 'Se requiere la altura de de la medida',
-            'container.height.numeric' => 'La altura de la medida debe ser un número',
-            'container.height.between' => 'La altura de la medida debe tener un valor mínimo de 0 y un máximo de 99999999999999999999999999.9999',
+            'measure.height.required' => 'Se requiere la altura de de la medida',
+            'measure.height.numeric' => 'La altura de la medida debe ser un número',
+            'measure.height.between' => 'La altura de la medida debe tener un valor mínimo de 0 y un máximo de 99999999999999999999999999.9999',
 
-            'container.container_id.required' => 'Se requiere el id del usuario',
-            'container.container_id.exists' => 'El id del usuario debe ser un id válido'
+            'measure.container_id.required' => 'Se requiere el id del usuario',
+            'measure.container_id.exists' => 'El id del usuario debe ser un id válido'
         ];
         if (!empty($except)) {
             $except = array_flip($except);
