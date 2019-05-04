@@ -43,6 +43,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Repositories\Interfaces\ContainerRepoInterface',
             'App\Repositories\ContainerRepo'
         );
+        $this->app->bind(
+            'App\Repositories\Interfaces\MeasureRepoInterface',
+            'App\Repositories\MeasureRepo'
+        );
     }
 
 }

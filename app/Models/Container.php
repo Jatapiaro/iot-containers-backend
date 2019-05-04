@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * ),
  * @OA\Property(
  *     type="number",
- *     description="Hight of the container in meters",
+ *     description="Height of the container in meters",
  *     property="height"
  * ),
  * @OA\Property(
@@ -106,10 +106,17 @@ class Container extends Model
     }
 
     /**
-     * Defines the relationship a container and his creator
+     * Defines the relationship of a container and his creator
      */
     public function user() {
         return $this->belongsTo('App\Models\User');
+    }
+
+    /**
+     * Defines the relationship of a container with his measures
+     */
+    public function measures() {
+        return $this->hasMany('App\Models\Measure');
     }
 
 }

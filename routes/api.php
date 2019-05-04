@@ -32,6 +32,15 @@ Route::group([
             Route::apiResource('containers','ContainerController');
 
             /**
+             * Measures
+             */
+            Route::apiResource(
+                'containers.measures',
+                'MeasureController',
+                ['except' => ['update', 'destroy']]
+            );
+
+            /**
              * Profile
              */
             Route::get('/me', 'MeController@me');

@@ -27,6 +27,7 @@ class CreateContainersTable extends Migration
                 ->references('id')
                 ->on('users');
 
+            $table->integer('time')->default(5);
             $table->boolean('dummy')->default(false);
             $table->timestamps();
         });
