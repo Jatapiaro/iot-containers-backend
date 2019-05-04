@@ -91,7 +91,7 @@ class User extends Authenticatable
 
             //Extra data for register
             'user.client_id' => 'required|exists:oauth_clients,id',
-            'user.client_secret' => 'required|exists:oauth_clients,secret'
+            'user.client_secret' => 'required|exists:oauth_clients,secret,id,'
         ];
         $book['messages'] = [
             'user.name.required' => 'El nombre del usuario es requerido',
@@ -110,6 +110,7 @@ class User extends Authenticatable
             // Extras
             'user.client_id.required' => 'Se requiere el id del cliente',
             'user.client_secret.required' => 'Se requiere el secret del cliente',
+            'user.client_secret.exists' => 'El secret del cliente debe ser válido'
         ];
         if (!empty($except)) {
             $except = array_flip($except);

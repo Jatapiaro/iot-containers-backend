@@ -30,7 +30,7 @@ class UserService {
      * @return App\Models\User
      */
     public function store($data) {
-        $this->validate($data);
+        $this->validate($data, ["user.client_id", "user.client_secret"]);
         // We extract only the user data
         $data = $data["user"];
         // Hash the password

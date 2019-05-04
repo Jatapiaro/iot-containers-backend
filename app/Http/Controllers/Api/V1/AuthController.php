@@ -88,6 +88,7 @@ class AuthController extends BaseController {
     public function register(Request $request)
     {
         $vb = User::ValidationBook();
+        $vb["rules"]["user.client_secret"] .= $request->input("user")["client_id"];
         $data = $request->validate($vb["rules"], $vb["messages"]);
 
         // Neccesary data to get a token at registration
