@@ -26,7 +26,6 @@ class ParticleService {
             'http_errors' => false
         ]);
         $dataDetails = json_decode((string) $response->getBody(), true);
-        \Log::info($dataDetails);
     }
 
 }
