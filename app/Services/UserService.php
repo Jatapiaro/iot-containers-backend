@@ -11,6 +11,9 @@ use App\Models\User;
 // Repos
 use App\Repositories\Interfaces\UserRepoInterface;
 
+// Services
+use App\Services\ParticleService;
+
 class UserService {
 
     /**
@@ -20,8 +23,16 @@ class UserService {
      */
     private $repo;
 
-    public function __construct(UserRepoInterface $repo) {
+    /**
+     * Repository
+     *
+     * @var ParticleService
+     */
+    private $particleService;
+
+    public function __construct(UserRepoInterface $repo, ParticleService $particleService) {
         $this->repo = $repo;
+        $this->particleService = $particleService;
     }
 
     /**
@@ -37,6 +48,7 @@ class UserService {
         $data["password"] = Hash::make($data["password"]);
         // Store the user
         $user = $this->repo->create($data);
+        $this->particleService->mirror($user->email);
         return $user;
     }
 

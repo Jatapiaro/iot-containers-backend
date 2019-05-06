@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "398e0ed09dea601f74b06edaf0188f12",
+    "content-hash": "2cb535b31e65307b507758024bcd646e",
     "packages": [
         {
             "name": "darkaonline/l5-swagger",
