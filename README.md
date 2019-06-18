@@ -3,6 +3,7 @@
 This is the backend for the IoT proyect that pretends to store all the data from different devices that read/measure the volume quantity on a container.
 
 # Install Instructions
+The following instructions asume that you already have Composer and then Laravel Installed. Please check how to install Composer on your system and laravel.
 
 1. Clone the repo
 2. Move to the recently created folder
@@ -60,7 +61,6 @@ $ yarn install
     2. `npm run dev` now is used as `yarn dev`
     3. To add a new npm package instead of `npm i package-name` just do `yarn add package-name`
 
-
 # Retrieving and using access tokens
 
 You need to get a client for your applications/clients. So, we need to get the client token in order to allow our users to consume our API.
@@ -101,3 +101,7 @@ $ php artisan l5-swagger:generate
 ```
 to generate all the documentation again.
 
+# Development Recomendations
+1. Never Ever Ever Develop On Master
+2. Always code in english
+3. Always create a new branch for your tasks. **Do not develop on master** 
