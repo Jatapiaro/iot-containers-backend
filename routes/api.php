@@ -29,7 +29,7 @@ Route::group([
             /**
              * Containers
              */
-            Route::apiResource('containers','ContainerController');
+            Route::apiResource('containers', 'ContainerController');
 
             /**
              * Measures
