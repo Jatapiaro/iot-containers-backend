@@ -112,9 +112,9 @@ class MeasureController extends BaseController {
     *         description="Measure to be registered",
     *         @OA\JsonContent(
     *              @OA\Property(
-    *                  property="container",
+    *                  property="measure",
     *                  type="object",
-    *                  ref="#/components/schemas/Container"
+    *                  ref="#/components/schemas/Measure"
     *              ),
     *         ),
     *     ),
