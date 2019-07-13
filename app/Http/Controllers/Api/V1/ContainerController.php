@@ -227,6 +227,44 @@ class ContainerController extends BaseController {
     }
 
     /**
+     * @OA\Delete(
+     *     path="/api/v1/containers/{container}",
+     *     summary="Deletes a container",
+     *     tags={"Containers"},
+     *     security={{"passport": {"*"}}},
+     *     @OA\Parameter(
+     *         description="Container to be deleted",
+     *         in="path",
+     *         name="container",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Container that was deleted",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity.",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         ),
+     *     )
+     * )
+     */
+    public function destroy(Request $request, Container $container) {
+        $this->validateOwnerShip($container);
+        $container->delete();
+        return new ContainerResource($container);
+    }
+
+    /**
      * Validates if the current user is the owner of the container
      *
      * @param App\Models\Container $container
