@@ -11,11 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  *     property="name"
  * ),
  * @OA\Property(
- *     type="string",
- *     description="ID of the photon device",
- *     property="device_id"
- * ),
- * @OA\Property(
  *     type="number",
  *     description="Height of the container in meters",
  *     property="height"

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Container;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller as BaseController;
 use App\Http\Resources\Container as ContainerResource;
 use Auth;
@@ -75,6 +76,51 @@ class ContainerController extends BaseController {
     {
         $containers = Auth::user()->containers;
         return ContainerResource::collection($containers);
+    }
+
+    /**
+    * @OA\Get(
+    *     path="/api/v1/containers/{container}",
+    *     summary="Shows the specified container",
+    *     tags={"Containers"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="container",
+    *         in="path",
+    *         description="ID of the container",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64",
+    *             example=1
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Shows the specified container",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthorized.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+    /**
+     * Get the specified element
+     * @param \Illuminate\Http\Request $request
+     * @param App\Models\Container $container
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, Container $container) {
+        $this->validateOwnerShip($container);
+        return new ContainerResource($container);
     }
 
     /**
@@ -173,11 +219,23 @@ class ContainerController extends BaseController {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Container $container) {
-        // TODO: throw ModelNotFoundException if user is not the owner of the container
+        $this->validateOwnerShip($container);
         $vb = Container::ValidationBook(['container.user_id']);
         $data = $request->validate($vb["rules"], $vb["messages"]);
         $container = $this->containerService->update($data, $container);
         return new ContainerResource($container);
+    }
+
+    /**
+     * Validates if the current user is the owner of the container
+     *
+     * @param App\Models\Container $container
+     */
+    private function validateOwnerShip(Container $container) {
+        $user = Auth::user();
+        if ($user->id !== $container->user_id) {
+            throw new ModelNotFoundException("The element with the {$container->id} was not found");
+        }
     }
 
 }
