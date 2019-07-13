@@ -49,7 +49,7 @@ class MeasureController extends BaseController {
     * @OA\Get(
     *     path="/api/v1/containers/{container}/measures",
     *     summary="Shows the measures of the given container",
-    *     tags={"Containers", "Measures"},
+    *     tags={"Measures"},
     *     security={{"passport": {"*"}}},
     *     @OA\Parameter(
     *         name="container",

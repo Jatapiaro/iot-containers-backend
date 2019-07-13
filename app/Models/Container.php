@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @OA\Schema(type="object", title="Container", description="Container model", required={"name", "device_id", "height", "radius"})
+ * @OA\Schema(type="object", title="Container", description="Container model", required={"name", "height", "radius"})
  * @OA\Property(
  *     type="string",
  *     description="Name of the container",

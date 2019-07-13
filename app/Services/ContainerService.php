@@ -38,6 +38,24 @@ class ContainerService {
     }
 
     /**
+     * Updates the given container
+     *
+     * @param arr $data to update
+     * @param Container $item to be updated
+     *
+     * @return App\Models\Container
+     */
+    public function update($data, Container $item) {
+        $this->validate($data, ['container.user_id']);
+        $data = $data["container"];
+        $data["volume"] = $this->calculateVolume($data);
+        // Update the container
+        $this->repo->update($data, $item->id);
+        $item->refresh();
+        return $item;
+    }
+
+    /**
      * Validate the given data using the validation book of the model
      *
      * @param array $data

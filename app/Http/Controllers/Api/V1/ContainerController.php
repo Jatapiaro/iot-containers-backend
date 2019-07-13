@@ -123,4 +123,61 @@ class ContainerController extends BaseController {
         return new ContainerResource($container);
     }
 
+    /**
+    * @OA\Put(
+    *     path="/api/v1/containers/{container}",
+    *     summary="Updates a container",
+    *     tags={"Containers"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         description="Container to update",
+    *         in="path",
+    *         name="container",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Data of the container to be updated",
+    *         @OA\JsonContent(
+    *              @OA\Property(
+    *                  property="container",
+    *                  type="object",
+    *                  ref="#/components/schemas/Container"
+    *              ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Container that was updated",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=422,
+    *         description="Unprocessable Entity.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+    /**
+     * Updates a Container from the system
+     * @param \Illuminate\Http\Request $request
+     * @param App\Models\Container $container
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Container $container) {
+        // TODO: throw ModelNotFoundException if user is not the owner of the container
+        $vb = Container::ValidationBook(['container.user_id']);
+        $data = $request->validate($vb["rules"], $vb["messages"]);
+        $container = $this->containerService->update($data, $container);
+        return new ContainerResource($container);
+    }
+
 }
