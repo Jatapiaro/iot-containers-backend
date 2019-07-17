@@ -30,6 +30,8 @@ class Measure extends Model
         'container_id',
         'height',
         'volume',
+        // Only for test seeding
+        'created_at'
     ];
 
     /**

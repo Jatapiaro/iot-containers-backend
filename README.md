@@ -45,12 +45,17 @@ $ php artisan passport:install
 $ php artisan db:seed
 ```
 
-10. Install yarn globally (if it is not installed)
+10. If you need to reset the database
+```shell
+$ php artisan migrate:refresh
+```
+
+11. Install yarn globally (if it is not installed)
 ```shell
 $ npm install -g yarn
 ```
 
-11. Install all npm dependencies
+12. Install all npm dependencies
 ```shell
 $ yarn install
 ```
