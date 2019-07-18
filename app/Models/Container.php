@@ -64,7 +64,7 @@ class Container extends Model
     {
         $book = ['rules' => [], 'messages' => []];
         $book['rules'] = [
-            'container.device_id' => 'string|nullable',
+            'container.device_id' => 'string|nullable|exists:devices,id|unique:containers,device_id',
             'container.dummy' => 'boolean',
             'container.height' => 'required|numeric|between:0,99999999999999999999999999.9999',
             'container.name' => 'string|required',
@@ -73,6 +73,8 @@ class Container extends Model
         ];
         $book['messages'] = [
             'container.device_id.string' => 'El id del dispositivo debe ser un texto',
+            'container.device_id.exists' => 'El id del dispositivo no es válido',
+            'container.device_id.unique' => 'El id del dispositivo ya ha sido usado',
 
             'container.dummy.boolean' => 'El campo dummy debe ser un valor booleano',
 

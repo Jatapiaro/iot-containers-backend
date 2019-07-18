@@ -40,7 +40,7 @@ class BaseEloquentRepo implements RepoInterface {
      * @return boolean
      */
     public function update(array $data, $id) {
-        return $this->model->where('id', $id)->update($data);
+        return $this->model->where('id', $id)->first()->update($data);
     }
 
     /**

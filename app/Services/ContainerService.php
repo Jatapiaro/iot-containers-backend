@@ -46,9 +46,16 @@ class ContainerService {
      * @return App\Models\Container
      */
     public function update($data, Container $item) {
-        $this->validate($data, ['container.user_id']);
+        /**
+         * Customize validation book
+         */
+        $vb = Container::ValidationBook(['container.user_id']);
+        $vb['rules']['container.device_id'] .= ",NULL,id,device_id,!{$item->device_id}";
+        $this->validate($data, [], [], $vb);
+
         $data = $data["container"];
         $data["volume"] = $this->calculateVolume($data);
+
         // Update the container
         $this->repo->update($data, $item->id);
         $item->refresh();
@@ -63,8 +70,11 @@ class ContainerService {
      * @param array $append
      * @return boolean
      */
-    public function validate($data, $except = [], $append = []) {
+    public function validate($data, $except = [], $append = [], $validationBook = null) {
         $vb = Container::ValidationBook($except, $append);
+        if ($validationBook !== null) {
+            $vb = $validationBook;
+        }
         $validator = Validator::make($data, $vb['rules'], $vb['messages']);
         if ($validator->fails()) {
             $errors = $validator->errors();
