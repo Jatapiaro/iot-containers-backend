@@ -219,11 +219,17 @@ class ContainerController extends BaseController {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Container $container) {
-
         $this->validateOwnerShip($container);
         $vb = Container::ValidationBook(['container.user_id']);
         $vb['rules']['container.device_id'] .= ",NULL,id,device_id,!{$container->device_id}";
         $data = $request->validate($vb["rules"], $vb["messages"]);
+        /**
+         * In case the device_id is not being send
+         * we force the value to null
+         */
+        if (!isset($data['container']['device_id'])) {
+            $data['container']['device_id'] = null;
+        }
         $container = $this->containerService->update($data, $container);
         return new ContainerResource($container);
     }

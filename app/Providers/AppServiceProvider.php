@@ -5,6 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
+// Observers
+use App\Models\Container;
+use App\Observers\ContainerObserver;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -26,6 +30,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+        $this->bootObservers();
+    }
+
+    /**
+     * Boot the specific observers for this system
+     */
+    public function bootObservers() {
+        // Put your Observers here
+        Container::observe(ContainerObserver::class);
     }
 
     /**

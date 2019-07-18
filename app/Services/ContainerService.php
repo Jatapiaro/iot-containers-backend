@@ -55,6 +55,7 @@ class ContainerService {
 
         $data = $data["container"];
         $data["volume"] = $this->calculateVolume($data);
+
         // Update the container
         $this->repo->update($data, $item->id);
         $item->refresh();
