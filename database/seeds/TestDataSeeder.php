@@ -95,6 +95,57 @@ class TestDataSeeder extends Seeder
             $containers[] = $this->cs->store($contData);
         }
 
+        $this->createYearData($containers);
+        $this->createDayData($containers);
+    }
+
+    private function createDayData($containers) {
+        /**
+         * Start date of seeding
+         */
+        $date = Carbon::now();
+        $stOfDay = $date->copy()->startOfDay();
+
+        /**
+         * Iterate the containers and add them dummy measures
+         */
+        foreach($containers as $container) {
+            $nMeasures = $this->faker->numberBetween($min = 1000, $max = 2000);
+            $measuresData = [];
+
+            // Constants in this iteration
+            $pi = pi();
+            $r2 = $container->radius * $container->radius;
+
+            for ($i = 0; $i < $nMeasures; $i++) {
+
+                // We got a dummy measured height
+                $measureHeight = $this->faker->randomFloat(
+                    $nbMaxDecimals = 2,
+                    $min = 0,
+                    $max = $container->height
+                );
+
+                // Calcuclate the current volume
+                $measureVolume = $measureHeight * $pi * $r2;
+
+                // Save the measure data
+                $measure = [
+                    'container_id' => $container->id,
+                    'height' => $measureHeight,
+                    'volume' => ($container->volume - $measureVolume),
+                    'created_at' => $stOfDay->copy()->addMinutes(rand(1, 1440))->format('Y-m-d H:i:s')
+                ];
+                // Add the measure to the list
+                $measuresData[] = $measure;
+
+            }
+            // Store all the measures
+            Measure::insert($measuresData);
+        }
+    }
+
+    private function createYearData($containers) {
         /**
          * Start date of seeding
          */
@@ -105,8 +156,7 @@ class TestDataSeeder extends Seeder
          * Iterate the containers and add them dummy measures
          */
         foreach($containers as $container) {
-
-            $nMeasures = $this->faker->numberBetween($min = 5000, $max = 10000);
+            $nMeasures = $this->faker->numberBetween($min = 10000, $max = 15000);
             $measuresData = [];
 
             // Constants in this iteration
@@ -139,7 +189,6 @@ class TestDataSeeder extends Seeder
             // Store all the measures
             Measure::insert($measuresData);
         }
-
-
     }
+
 }
