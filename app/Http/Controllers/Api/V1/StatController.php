@@ -3,13 +3,23 @@
 namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
-use App\Models\Container;
-use App\Models\Measure;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller as BaseController;
-use App\Http\Resources\Stat as StatResource;
 use Auth;
-use DB;
+
+/**
+ * Models
+ */
+use App\Models\Container;
+
+/**
+ * Repos
+ */
+use App\Repositories\Interfaces\MeasureRepoInterface;
+
+/**
+ * Resources
+ */
+use App\Http\Resources\Stat as StatResource;
 
 /**
  * @OA\Tag(
@@ -19,17 +29,65 @@ use DB;
  */
 class StatController extends BaseController {
 
+    /**
+     * Measure repo
+     *
+     * @var App\Repositories\Interfaces\MeasureRepoInterface;
+     */
+    private $measureRepo;
+
+    /**
+     * Constructor
+     */
+    public function __construct(MeasureRepoInterface $measureRepo) {
+        $this->measureRepo = $measureRepo;
+    }
+
+    /**
+    * @OA\Get(
+    *     path="/api/v1/stats/{container}/day",
+    *     summary="Shows the volume average for each hour of the current day for a given container",
+    *     tags={"Stats"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="container",
+    *         in="path",
+    *         description="ID of the container",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64",
+    *             example=1
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Shows the volume average for each hour of the current day",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthorized.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+    /**
+     * Get the volume average for each hour of the current day for a given container
+     * @param \Illuminate\Http\Request $request
+     * @param App\Models\Container $container
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function day(Container $container)
     {
-        $date = Carbon::now();
-        $stOfDay = $date->copy()->startOfDay();
-        $endOfDay = $date->copy()->endOfDay();
-        $meas = Measure::selectRaw('AVG(volume) average, HOUR(created_at) hour')
-            ->where('created_at', '>=', $stOfDay)
-            ->where('created_at', '<=', $endOfDay)
-            ->groupBy('hour')
-            ->get();
-        return StatResource::collection($meas);
+        $this->validateOwnerShip($container);
+        $dayAverage = $this->measureRepo->dayAverage($container);
+        return StatResource::collection($dayAverage);
     }
 
     /**
