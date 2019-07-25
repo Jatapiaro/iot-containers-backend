@@ -45,6 +45,10 @@ Route::group([
              */
             Route::get('/me', 'MeController@me');
 
+            /**
+             * Stats
+             */
+            Route::get('/stats/{container}/day', 'StatController@day');
 
         });
 
