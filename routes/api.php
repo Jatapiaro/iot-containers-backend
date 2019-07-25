@@ -48,4 +48,6 @@ Route::group([
 
         });
 
+        Route::get('/stats/{container}/day', 'StatController@day');
+
     });
