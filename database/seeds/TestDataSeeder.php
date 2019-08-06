@@ -95,22 +95,30 @@ class TestDataSeeder extends Seeder
             $containers[] = $this->cs->store($contData);
         }
 
-        $this->createYearData($containers);
-        $this->createDayData($containers);
+        $this->createMeasureData($containers, 'day', 2500, 5000);
+        $this->createMeasureData($containers, 'week', 5000, 7500);
+        $this->createMeasureData($containers, 'month', 7500, 10000);
+        $this->createMeasureData($containers, 'year', 10000, 15000);
     }
 
-    private function createDayData($containers) {
-        /**
-         * Start date of seeding
-         */
-        $date = Carbon::now();
-        $stOfDay = $date->copy()->startOfDay();
+    /**
+     * Creates the dummy measures for a given $interval
+     *
+     * @param array $containters to be filled
+     * @param str $interval of the measures
+     * @param int $minMeasures to add
+     * @param int $maxMeasures to add
+     */
+    private function createMeasureData(
+        $containers,
+        $interval = 'day',
+        $minMeasures = 1000,
+        $maxMeasures = 2000)
+    {
 
-        /**
-         * Iterate the containers and add them dummy measures
-         */
+        $startDate = $this->getStartDate($interval);
         foreach($containers as $container) {
-            $nMeasures = $this->faker->numberBetween($min = 1000, $max = 2000);
+            $nMeasures = $this->faker->numberBetween($min = $minMeasures, $max = $maxMeasures);
             $measuresData = [];
 
             // Constants in this iteration
@@ -134,7 +142,7 @@ class TestDataSeeder extends Seeder
                     'container_id' => $container->id,
                     'height' => $measureHeight,
                     'volume' => ($container->volume - $measureVolume),
-                    'created_at' => $stOfDay->copy()->addMinutes(rand(1, 1440))->format('Y-m-d H:i:s')
+                    'created_at' => $this->getDateGivenRange($startDate, $interval)
                 ];
                 // Add the measure to the list
                 $measuresData[] = $measure;
@@ -143,51 +151,50 @@ class TestDataSeeder extends Seeder
             // Store all the measures
             Measure::insert($measuresData);
         }
+
     }
 
-    private function createYearData($containers) {
+    /**
+     * Calcultates the start date of a given interval
+     * @param str $interval
+     *
+     * @return Carbon $startDate
+     */
+    private function getStartDate($interval = 'day') {
         /**
-         * Start date of seeding
+         * Get today's date
          */
         $date = Carbon::now();
-        $date->sub('78 weeks');
+        switch($interval) {
+            case 'day':
+                return $date->copy()->startOfDay();
+            case 'week':
+                return $date->copy()->startOfWeek();
+            case 'month':
+                return $date->copy()->startOfMonth();
+            case 'year':
+                return $date->copy()->startOfYear();
+        }
+    }
 
-        /**
-         * Iterate the containers and add them dummy measures
-         */
-        foreach($containers as $container) {
-            $nMeasures = $this->faker->numberBetween($min = 10000, $max = 15000);
-            $measuresData = [];
-
-            // Constants in this iteration
-            $pi = pi();
-            $r2 = $container->radius * $container->radius;
-
-            for ($i = 0; $i < $nMeasures; $i++) {
-
-                // We got a dummy measured height
-                $measureHeight = $this->faker->randomFloat(
-                    $nbMaxDecimals = 2,
-                    $min = 0,
-                    $max = $container->height
-                );
-
-                // Calcuclate the current volume
-                $measureVolume = $measureHeight * $pi * $r2;
-
-                // Save the measure data
-                $measure = [
-                    'container_id' => $container->id,
-                    'height' => $measureHeight,
-                    'volume' => ($container->volume - $measureVolume),
-                    'created_at' => $date->copy()->addWeeks(rand(1, 78))->addMinutes(rand(1, 1440))->format('Y-m-d H:i:s')
-                ];
-                // Add the measure to the list
-                $measuresData[] = $measure;
-
-            }
-            // Store all the measures
-            Measure::insert($measuresData);
+    /**
+     * Given a start date, and an interval, return a new date in the given interval
+     *
+     * @param Carbon $startDate
+     * @param str $interval
+     *
+     * @return Carbon formated date
+     */
+    private function getDateGivenRange($startDate, $interval = 'day') {
+        switch($interval) {
+            case 'day':
+                return $startDate->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
+            case 'week':
+                return $startDate->copy()->addMinutes(rand(0, (1440*7)))->format('Y-m-d H:i:s');
+            case 'month':
+                return $startDate->copy()->addMinutes(rand(0, (1440*32)))->format('Y-m-d H:i:s');
+            case 'year':
+                return $startDate->copy()->addMinutes(rand(0, (1440*367)))->format('Y-m-d H:i:s');
         }
     }
 
