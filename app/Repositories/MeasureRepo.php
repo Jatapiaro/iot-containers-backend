@@ -83,4 +83,26 @@ class MeasureRepo extends BaseEloquentRepo implements MeasureRepoInterface
         return $weekAverage;
     }
 
+     /**
+     * Obtains the volume average for each month of the year
+     *
+     * @param App\Models\Container $container of the measures
+     *
+     * @return Collection
+     */
+    public function yearAverage(Container $container) {
+        $date = Carbon::now(); 
+        $startDate = $date->copy()->startOfYear();
+        $endDate = $date->copy()->endOfYear();
+
+        $yearAverage = $this->model->selectRaw('AVG(volume) volume, MONTH(created_at) as month')
+            ->where('created_at', '>=', $startDate)
+            ->where('created_at', '<=', $endDate)
+            ->where('container_id', $container->id)
+            ->groupBy('month')
+            ->get();
+
+        return $yearAverage;
+    }
+
 }
