@@ -49,6 +49,7 @@ Route::group([
              * Stats
              */
             Route::get('/stats/{container}/day', 'StatController@day');
+            Route::get('/stats/{container}/week','StatController@week');
 
         });
 
