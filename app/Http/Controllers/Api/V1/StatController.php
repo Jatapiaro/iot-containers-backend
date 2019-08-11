@@ -185,6 +185,54 @@ class StatController extends BaseController {
         return StatResource::collection($monthAverage);
     }
 
+      /**
+    * @OA\Get(
+    *     path="/api/v1/stats/{container}/year",
+    *     summary="Shows the volume average for each month of the current year for a given container",
+    *     tags={"Stats"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="container",
+    *         in="path",
+    *         description="ID of the container",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64",
+    *             example=1
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Shows the volume average for each month of the current year",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthorized.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+     /**
+     * Get the volume average for each month of the current year for a given container
+     * @param \Illuminate\Http\Request $request
+     * @param App\Models\Container $container
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function year(Container $container)
+    {
+        $this->validateOwnerShip($container);
+        $yearAverage = $this->measureRepo->yearAverage($container);
+        return StatResource::collection($yearAverage);
+    }
+
+
     /**
      * Validates if the current user is the owner of the container
      *
