@@ -90,6 +90,54 @@ class StatController extends BaseController {
         return StatResource::collection($dayAverage);
     }
 
+
+     /**
+    * @OA\Get(
+    *     path="/api/v1/stats/{container}/week",
+    *     summary="Shows the volume average for each day of the current week for a given container",
+    *     tags={"Stats"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="container",
+    *         in="path",
+    *         description="ID of the container",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64",
+    *             example=1
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Shows the volume average for each day of the current week",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthorized.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+     /**
+     * Get the volume average for each day of the current week for a given container
+     * @param \Illuminate\Http\Request $request
+     * @param App\Models\Container $container
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function week(Container $container)
+    {
+        $this->validateOwnerShip($container);
+        $weekAverage = $this->measureRepo->weekAverage($container);
+        return StatResource::collection($weekAverage);
+    }
+
     /**
      * Validates if the current user is the owner of the container
      *

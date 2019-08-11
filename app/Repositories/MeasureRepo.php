@@ -39,4 +39,26 @@ class MeasureRepo extends BaseEloquentRepo implements MeasureRepoInterface
         return $dayAverage;
     }
 
+    /**
+     * Obtains the volume average for each day of the week
+     *
+     * @param App\Models\Container $container of the measures
+     *
+     * @return Collection
+     */
+    public function weekAverage(Container $container) {
+        $date = Carbon::now(); 
+        $startDate = $date->copy()->startOfWeek();
+        $endDate = $date->copy()->endOfWeek();
+
+        $weekAverage = $this->model->selectRaw('AVG(volume) volume, DAYOFWEEK(created_at) as day')
+            ->where('created_at', '>=', $startDate)
+            ->where('created_at', '<=', $endDate)
+            ->where('container_id', $container->id)
+            ->groupBy('day')
+            ->get();
+
+        return $weekAverage;
+    }
+
 }
