@@ -95,7 +95,7 @@ class MeasureController extends BaseController {
     * @OA\Post(
     *     path="/api/v1/containers/{container}/measures",
     *     summary="Register a new measure",
-    *     tags={"Containers", "Measures"},
+    *     tags={"Measures"},
     *     security={{"passport": {"*"}}},
     *     @OA\Parameter(
     *         name="container",
@@ -155,6 +155,55 @@ class MeasureController extends BaseController {
         return new MeasureResource($measure);
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/v1/particle/{device}",
+    *     summary="Register a new measure from a photon particle",
+    *     tags={"Measures"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="device",
+    *         in="path",
+    *         description="ID of the device",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="string",
+    *             example="123456789"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Measure to be registered",
+    *         @OA\JsonContent(
+    *              @OA\Property(
+    *                  property="measure",
+    *                  type="object",
+    *                  ref="#/components/schemas/Measure"
+    *              ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Container that was created",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=422,
+    *         description="Unprocessable Entity.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthorized.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
     /**
      * Stores a measure using particle.
      *
