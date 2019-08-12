@@ -55,4 +55,8 @@ Route::group([
 
         });
 
+        Route::group(['middleware' => ['client']], function() {
+            Route::post('/particle/{device}', 'MeasureController@particle');
+        });
+
     });

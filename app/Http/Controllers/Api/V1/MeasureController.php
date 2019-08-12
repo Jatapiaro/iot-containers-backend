@@ -95,7 +95,7 @@ class MeasureController extends BaseController {
     * @OA\Post(
     *     path="/api/v1/containers/{container}/measures",
     *     summary="Register a new measure",
-    *     tags={"Containers", "Measures"},
+    *     tags={"Measures"},
     *     security={{"passport": {"*"}}},
     *     @OA\Parameter(
     *         name="container",
@@ -147,8 +147,89 @@ class MeasureController extends BaseController {
         $data = $request->validate($vb["rules"], $vb["messages"]);
         // Add the container id to the measure
         $data["measure"]["container_id"] = $container->id;
-        $data["measure"]["volume"] = 9.0;
+        $pi = pi();
+        $r2 = $container->radius * $container->radius;
+        $measureVolume = $pi * $r2 * $data["measure"]["height"];
+        $data["measure"]["volume"] = ($container->volume - $measureVolume);
         $measure = $this->measureService->store($data);
         return new MeasureResource($measure);
     }
+
+    /**
+    * @OA\Post(
+    *     path="/api/v1/particle/{device}",
+    *     summary="Register a new measure from a photon particle",
+    *     tags={"Measures"},
+    *     security={{"passport": {"*"}}},
+    *     @OA\Parameter(
+    *         name="device",
+    *         in="path",
+    *         description="ID of the device",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="string",
+    *             example="123456789"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Measure to be registered",
+    *         @OA\JsonContent(
+    *              @OA\Property(
+    *                  property="measure",
+    *                  type="object",
+    *                  ref="#/components/schemas/Measure"
+    *              ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Container that was created",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=422,
+    *         description="Unprocessable Entity.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthorized.",
+    *         @OA\JsonContent(
+    *             type="object"
+    *         ),
+    *     )
+    * )
+    */
+    /**
+     * Stores a measure using particle.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  string $device id
+     * @return \Illuminate\Http\Response
+     */
+    public function particle(Request $request, $device) {
+        $container = Container::where('device_id', $device)->first();
+        if (is_null($container)) {
+            return new MeasureResource(null);
+        }
+
+        $vb = Measure::ValidationBook(['measure.container_id']);
+        $data = $request->validate($vb["rules"], $vb["messages"]);
+
+        $data["measure"]["container_id"] = $container->id;
+
+        // Calculate current volume
+        $pi = pi();
+        $r2 = $container->radius * $container->radius;
+        $measureVolume = $pi * $r2 * $data["measure"]["height"];
+        $data["measure"]["volume"] = ($container->volume - $measureVolume);
+
+        $measure = $this->measureService->store($data);
+        return new MeasureResource($measure);
+    }
+
 }

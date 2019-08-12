@@ -91,7 +91,7 @@ class StatController extends BaseController {
     }
 
 
-     /**
+    /**
     * @OA\Get(
     *     path="/api/v1/stats/{container}/week",
     *     summary="Shows the volume average for each day of the current week for a given container",
