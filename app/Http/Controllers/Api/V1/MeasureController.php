@@ -88,7 +88,7 @@ class MeasureController extends BaseController {
     public function index(Request $request, Container $container)
     {
         $measures = ($container->user_id == Auth::user()->id)? $container->measures : Measure::where('id', '-1')->get();
-        return MeasureResource::collection($measures);
+        return MeasureResource::collection($measures->take(60));
     }
 
     /**
