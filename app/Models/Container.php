@@ -113,7 +113,7 @@ class Container extends Model
      * Defines the relationship of a container with his measures
      */
     public function measures() {
-        return $this->hasMany('App\Models\Measure');
+        return $this->hasMany('App\Models\Measure')->orderBy('created_at', 'DESC');
     }
 
 }

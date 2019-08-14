@@ -14,6 +14,8 @@ class Container extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $data = parent::toArray($request);
+        $data['measures'] = $this->measures->take(60);
+        return $data;
     }
 }

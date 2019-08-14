@@ -171,7 +171,7 @@ class StatController extends BaseController {
     *     )
     * )
     */
-     /**
+    /**
      * Get the volume average for each day of the current week for a given container
      * @param \Illuminate\Http\Request $request
      * @param App\Models\Container $container
@@ -185,7 +185,7 @@ class StatController extends BaseController {
         return StatResource::collection($monthAverage);
     }
 
-      /**
+    /**
     * @OA\Get(
     *     path="/api/v1/stats/{container}/year",
     *     summary="Shows the volume average for each month of the current year for a given container",
@@ -218,7 +218,7 @@ class StatController extends BaseController {
     *     )
     * )
     */
-     /**
+    /**
      * Get the volume average for each month of the current year for a given container
      * @param \Illuminate\Http\Request $request
      * @param App\Models\Container $container
