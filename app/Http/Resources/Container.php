@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Measure as MeasureResource;
 
 class Container extends JsonResource
 {
@@ -15,7 +16,7 @@ class Container extends JsonResource
     public function toArray($request)
     {
         $data = parent::toArray($request);
-        $data['measures'] = $this->measures->take(60);
+        $data['measures'] = MeasureResource::collection($this->measures->take(60));
         return $data;
     }
 }
