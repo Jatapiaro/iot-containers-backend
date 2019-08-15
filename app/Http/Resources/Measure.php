@@ -21,7 +21,7 @@ class Measure extends JsonResource
         $data['volume'] = $this->volume;
         $data['container_id'] = $this->container_id;
         $createdAt = new Carbon($this->created_at);
-        $data['created_at'] = $createdAt->toDateTimeString();
+        $data['created_at'] = $createdAt->toDayDateTimeString();
         $data['updated_at'] = $this->updated_at;
         return $data;
     }
